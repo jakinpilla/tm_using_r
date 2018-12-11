@@ -40,17 +40,30 @@ for (i in 1:24) {
 
 mytxtdf
 summary(mytxtdf)
-head(mytxtdf, 3) %>% View()
+head(mytxtdf, 3) 
 
 # 텍스트 사전처리(tm 라이브러리 이용)
 mypreprocess <- textProcessor(mytxtdf$abstract, metadata = mytxtdf)
 
+mypreprocess$documents[1]
 
+# DTM을 구성함
+myout <- prepDocuments(mypreprocess$documents, mypreprocess$vocab, 
+                       mypreprocess$meta, lower.thresh = 0)
 
+# STM 추정(5개의 토픽)
+mystm <- stm(myout$documents, myout$vocab,K=5, prevalence = ~return.kor, data = myout$meta,
+             seed = 2494, init.type = "Spectral")
 
+# 각 토픽이 발현되는 단어들 점검
+labelTopics(mystm, topics = 1:5)
 
+# 토픽들 사이의 관계
+mystm.corr <- topicCorr(mystm)
+mystm.corr
 
-
+install.packages("igraph")
+plot(mystm.corr)
 
 
 
