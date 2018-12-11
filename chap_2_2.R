@@ -65,6 +65,23 @@ mystm.corr
 install.packages("igraph")
 plot(mystm.corr)
 
+# 메타데이터와 토픽 발현가능성의 관계 테스트
+myresult <- estimateEffect(c(1:5) ~ return.kor, mystm, mytxtdf)
+summary(myresult)
+
+plot(myresult, covariate = "return.kor", 
+     topics=4, model=mystm, xlim=c(-1.5, 1.5))
+
+
+
+
+
+
+
+
+
+
+
 
 
 
