@@ -1,0 +1,8 @@
+BACKGROUND AND AIMS:
+Little is known about the extent depression adds to the costs of treatment for physical health conditions. This study examined the paths and the extent to which depression in conjunction with a physical health problem is associated with an increase in healthcare expenditures and how that is different between younger and older adults.
+METHODS:
+Data from the 2007 Medical Expenditure Panel Survey (MEPS) were analyzed. Depression status and physical health conditions were identified through ICD-9 codes. The multiple group structural equation modeling (SEM) was employed to examine the moderated mediation effects.
+RESULTS:
+Approximately 11% of adults had clinical depression. The multiple group SEM for both younger and older adult groups supports not only a direct effect of depression on expenditures but also an indirect effect via comorbid health conditions. Furthermore, the indirect effect was significantly more prominent among older respondents than among younger ones, indicating significant moderated mediation by age.
+CONCLUSIONS:
+Depression has greater effects on comorbid health conditions and an increase in total healthcare expenditures through comorbid conditions among older adults. Findings of this study suggest that proper detection and treatment of depression is beneficial in reducing overall healthcare expenditures, especially among older adults.
