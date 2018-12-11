@@ -119,9 +119,53 @@ ggplot(data = myagg.long.year, aes(x = pub.year, y=value)) +
 # install.packages("RTextTools")
 # 지도 기계학습을 이용한 감성분석
 library(RTextTools)
-getwd()
 
+h.train <- readLines("happy.txt")
+s.train <- readLines("sad.txt")
+h.test <- readLines("happy_test.txt")
+s.test <- readLines("sad_test.txt")
 
+# 데이터를 각각 훈련 데이터, 테스트 데이터 순으로 결합
+tweet <- c(h.train, s.train, h.test, s.test)
+
+# 해당 트윗에 맞는 감정을 부여(happy=1, sad=0)
+sent <- c(rep(1, length(h.train)), 
+          rep(0, length(s.train)),
+          rep(1, length(h.test)),
+          rep(0, length(s.test)))
+sent
+
+# 데이터의 사전처리
+tweet.pp <- create_matrix(tweet, language = "english", 
+                          removeStopwords = F,
+                          removeNumbers = T, 
+                          stripWhitespace = T, 
+                          removePunctuation = T, 
+                          toLower = T, 
+                          stemWords = F, tm :: weightTfIdf)
+
+tweet.pp <- as.matrix(tweet.pp)
+
+# 여러 기계학습 알고리즘을 적용
+train.end <- length(h.train) + length(s.train)
+all.end <- length(sent)
+container <- create_container(tweet.pp, 
+                              as.numeric(sent), 
+                              trainSize = 1:train.end, 
+                              testSize = (1+train.end) : all.end,
+                              virgin = F)
+
+myclassifier <- train_models(container, 
+                             algorithms = c("SVM", "GLMNET", "SLDA", "TREE", "BAGGING",
+                                            "RF", "MAXENT", "BOOSTING"))
+
+# 기계학습 알고리즘을 활용해 테스트 데이터의 문서에 드러난 감정을 예측
+myresult <- classify_models(container, myclassifier)
+dim(myresult)
+head(myresult)
+
+# 테스트 데이터 문서에 대한 인간의 판단을 추출
+mytestlabel <- as.numeric(sent)[(1+train.end) : all.end]
 
 
 
