@@ -28,6 +28,10 @@ table(emolex$sentiment)
 emolex$word[emolex$sentiment == "anger"]
 
 # 텍스트 데이터 호출
+install.packages("tm")
+install.packages("stringr")
+install.packages("tidyverse")
+
 library(tm)
 library(stringr)
 library(dplyr)
