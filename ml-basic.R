@@ -31,13 +31,52 @@ mydata %>%
          title = Title,
          cate  = Category) -> mydata; head(mydata)
 
+# 코퍼스 만들고 데이터를 정제하기
+cps <- VCorpus(VectorSource(mydata$title))
+cps
+cps[[1]]$content
+
 # 카테고리의 구성 비율은 어떻게 될까?
 mydata %>%
   group_by(cate) %>%
-  tally()
+  tally( ) %>%
+  mutate(pct = (n / sum(n) * 100)) %>%
+  rename(cnt = n)
 
+# 이런 비율을 유지하면서 데이터를 나눌 수 있을까?
+# install.packages('caTools')
+library(caTools)
+head(mydata)
 
+Y = mydata[, "cate"] # extract labels from the data
 
+msk = sample.split(Y, SplitRatio=.8)
+table(Y,msk)
+t=sum( msk); t  # number of elements in one class
+f=sum(!msk); f  # number of elements in the other class
+
+# use results
+train = mydata[msk, 2:3]  # use output of sample.split to ...
+# train %>% View
+
+train %>%
+  group_by(cate) %>%
+  tally() %>%
+  mutate(pct = (n / sum(n) * 100)) %>%
+  rename(cnt = n)
+
+test= mydata[!msk,2:3]  # create train and test subsets
+test %>%
+  group_by(cate) %>% 
+  tally() %>% 
+  mutate(pct = n / sum(n) * 100) %>% 
+  rename(cnt = n)
+
+train.txt <- train$title
+test.txt <- test$title
+
+train.label <- train$cate
+test.label <-test$cate
 
 # Step 2. Create your document term matrices for the training data.
 train.dtm <- as.matrix(DocumentTermMatrix(train, control=list(wordLengths=c(1,Inf))))

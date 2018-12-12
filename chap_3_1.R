@@ -35,6 +35,7 @@ install.packages("tidyverse")
 library(tm)
 library(stringr)
 library(dplyr)
+library(tidyverse)
 
 my.text.location <- "./ymbaek_papers"
 mypaper <- VCorpus(DirSource(my.text.location),
@@ -94,11 +95,18 @@ myagg$pos.sum <- ifelse(is.na(myagg$pos.sum), 0, myagg$pos.sum)
 myagg$neg.sum <- ifelse(is.na(myagg$neg.sum), 0, myagg$neg.sum)
 myagg
 
+head(myagg)
+library(reshape2)
+
+
 myagg.long <- reshape(myagg, idvar = "paper.id", 
                       varying = list(2:4), timevar = "category", 
                       v.names = "value", direction= "long")
 
 myagg.long
+
+melt(myagg, id.vars = c("paper.id", "paper.name", "pub.year"),
+     value.name = "value") %>% head
 
 myagg.long$cate[myagg.long$category == 1] <- "Positive words"
 myagg.long$cate[myagg.long$category == 2] <- "Negative words"
@@ -171,9 +179,14 @@ head(myresult)
 # 테스트 데이터 문서에 대한 인간의 판단을 추출
 mytestlabel <- as.numeric(sent)[(1+train.end) : all.end]
 
-
-
-
+table(myresult$SVM_LABEL, mytestlabel)
+table(myresult$GLMNET_LABEL, mytestlabel)
+table(myresult$GLMNET_LABEL, mytestlabel)
+table(myresult$TREE_LABEL, mytestlabel)
+table(myresult$BAGGING_LABEL, mytestlabel)
+table(myresult$FORESTS_LABEL, mytestlabel)
+table(myresult$MAXENTROPY_LABEL, mytestlabel)
+table(myresult$LOGITBOOST_LABEL, mytestlabel)
 
 
 
