@@ -21,6 +21,24 @@ train <- tm_map(train, content_transformer(tolower))
 train <- tm_map(train, content_transformer(removeNumbers))
 train <- tm_map(train, content_transformer(removePunctuation))
 
+# 한국어 텍스트 데이터를 불어오기
+# 먼저 제목만으로된 텍스트를 분류할 수 있는지 시도해보자.
+mydata <- read.csv('./labeled_dataset.csv')
+head(mydata)
+mydata %>% 
+  select(-X) %>% 
+  rename(date = Date,
+         title = Title,
+         cate  = Category) -> mydata; head(mydata)
+
+# 카테고리의 구성 비율은 어떻게 될까?
+mydata %>%
+  group_by(cate) %>%
+  tally()
+
+
+
+
 # Step 2. Create your document term matrices for the training data.
 train.dtm <- as.matrix(DocumentTermMatrix(train, control=list(wordLengths=c(1,Inf))))
 #train.matrix <- as.matrix(train.dtm, stringsAsFactors=F)
@@ -44,12 +62,13 @@ label.df<- cSplit(label.df, 'filenames', sep="_", type.convert=FALSE)
 train.df$corpus<- label.df$filenames_1
 test.df$corpus <- c("Neg")
 
-
 # Step 6. Create folds of your data, then run the training once to inspect results
 df.train <- train.df
 df.test <- train.df
 df.model<-ksvm(corpus~., data= df.train, kernel="rbfdot")
 df.pred<-predict(df.model, df.test)
+df.pred %>% as.factor -> df.pred; df.pred %>% class
+df.test$corpus <- as.factor(df.test$corpus) ; df.test$corpus %>% class
 con.matrix<-confusionMatrix(df.pred, df.test$corpus)
 print(con.matrix)
 
