@@ -43,6 +43,7 @@ mydata %>%
   mutate(pct = (n / sum(n) * 100)) %>%
   rename(cnt = n)
 
+
 # 이런 비율을 유지하면서 데이터를 나눌 수 있을까?
 # install.packages('caTools')
 library(caTools)
